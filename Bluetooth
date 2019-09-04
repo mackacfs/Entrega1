@@ -1,0 +1,109 @@
+#include <SoftwareSerial.h>
+
+//Create a new software  serial
+SoftwareSerial bluetooth(2, 3); //TX, RX (Bluetooth)
+  
+int ledVermelho = 13;
+int vermelho = 0;
+
+int ledAmarelo = 12;
+int amarelo = 0;
+
+int ledAzul = 11;
+int azul = 0;
+
+int ledVerde = 10;
+int verde = 0;
+
+boolean festa =  false;
+
+char dados; 
+
+void setup() {
+  
+  bluetooth.begin(9600);
+  
+  pinMode(ledVermelho, OUTPUT);
+  pinMode(ledAmarelo, OUTPUT);
+  pinMode(ledAzul, OUTPUT);
+  pinMode(ledVerde, OUTPUT);
+
+  bluetooth.println("Aplicação Iniciada.");
+}
+
+void loop() {
+
+  if (bluetooth.available() > 0) {
+
+    dados = bluetooth.read();
+
+    
+       switch(dados){
+          case 'a':
+              if(vermelho == 0){vermelho=1;}else{vermelho=0;}
+            break;
+          case 'b':
+              if(amarelo == 0){amarelo=1;}else{amarelo=0;}
+            break;
+          case 'c':
+              if(azul == 0){azul=1;}else{azul=0;}
+            break;
+          case 'd':
+              if(verde == 0){verde=1;}else{verde=0;}
+            break;
+
+          case 'f':
+              if(festa == false){festa=true;bluetooth.println("Modo Festa Ligado");}else{festa=false;bluetooth.println("Modo Festa Desligado");}
+            break;
+
+          case 'r':
+              vermelho=0;
+              azul=0;
+              amarelo=0;
+              verde=0;
+              festa=false;
+              break;
+              
+          case 't':
+              vermelho=1;
+              azul=1;
+              amarelo=1;
+              verde=1;
+              festa=false;
+              break;
+           
+        }
+        
+        if(festa == false){
+          bluetooth.println("==================== \n");
+          bluetooth.println("STATUS \n");
+          bluetooth.println("==================== \n");
+          if(vermelho == 1){digitalWrite(ledVermelho, HIGH);bluetooth.println("Vermelho Ligado");}else{digitalWrite(ledVermelho, LOW);bluetooth.println("Vermelho Desligado");}
+        
+          if(amarelo == 1){digitalWrite(ledAmarelo, HIGH);bluetooth.println("Amarelo Ligado");}else{digitalWrite(ledAmarelo, LOW);bluetooth.println("Amarelo Desligado");}
+          
+          if(azul == 1){digitalWrite(ledAzul, HIGH);bluetooth.println("Azul Ligado");}else{digitalWrite(ledAzul, LOW);bluetooth.println("Azul Desligado");}
+          
+          if(verde == 1){digitalWrite(ledVerde, HIGH);bluetooth.println("Verde Ligado");}else{digitalWrite(ledVerde, LOW);bluetooth.println("Verde Desligado");}
+           
+        }
+        else{
+          digitalWrite(ledVermelho, HIGH);
+          delay(500);
+          digitalWrite(ledVermelho, LOW);
+          delay(500);
+          digitalWrite(ledAmarelo, HIGH);
+          delay(500);
+          digitalWrite(ledAmarelo, LOW);
+          delay(500);
+          digitalWrite(ledAzul, HIGH);
+          delay(500);
+          digitalWrite(ledAzul, LOW);
+          delay(500);
+          digitalWrite(ledVerde, HIGH);
+          delay(500);
+          digitalWrite(ledVerde, LOW);
+         }
+    
+  }
+}
